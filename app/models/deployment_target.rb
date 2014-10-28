@@ -6,4 +6,6 @@ class DeploymentTarget < BaseResource
     string :endpoint_url
   end
 
+  has_many :deployments
+
 end

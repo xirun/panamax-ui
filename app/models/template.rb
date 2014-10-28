@@ -33,6 +33,10 @@ class Template < BaseResource
     'Image'.pluralize(image_count)
   end
 
+  def images_attributes=(attributes)
+
+  end
+
   def icon_src
     if type.blank?
       icon_source_for('default')
