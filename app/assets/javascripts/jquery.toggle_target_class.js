@@ -2,10 +2,15 @@
   $.fn.toggleTargetClass = function() {
     $(this).on('click', function(e) {
       e.preventDefault();
-      var $el = $(e.currentTarget);
+      var $el = $(e.currentTarget),
+          target = $el.data('toggle-target');
 
       var cssClass = $el.data('toggle-class');
-      $($el.data('toggle-target')).toggleClass(cssClass);
+      if (target === 'this') {
+        $(this).toggleClass(cssClass);
+      } else {
+        $(target).toggleClass(cssClass);
+      }
     });
   };
 })(jQuery);

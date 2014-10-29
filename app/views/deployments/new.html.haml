@@ -33,69 +33,72 @@
   = f.hidden_field :template_id
   = f.hidden_field :deployment_target_id
   = f.fields_for :images do |image_fields|
-    %h3.image-name= image_fields.object.name
-    .tab-container
-      .tabs.column
-        .hide
-          %label{ for: 'hide' }
-            .icon
-            .text Hide Tabs
-        .tab
-          %label{ for: 'vars' }
-            .icon
-            .text Environment Variables
-        .tab
-          %label{ for: 'options' }
-            .icon
-            .text
-              Options
-      .cards.column
-        .card.vars
-          .content
-            .title
-              %h3 Environment Variables
+    - index = image_fields.options[:child_index]
+    .deployment-item
+      %h3{ class: "image-name expand #{'expanded' if index == 0}", data: { toggle: { target: 'this', class: 'expanded' } }}
+        = image_fields.object.name
+      .tab-container
+        .tabs.column
+          .hide
+            %label{ for: 'hide' }
+              .icon
+              .text Hide Tabs
+          .tab
+            %label{ for: 'vars' }
+              .icon
+              .text Environment Variables
+          .tab
+            %label{ for: 'options' }
+              .icon
+              .text
+                Options
+        .cards.column
+          .card.vars
+            .content
+              .title
+                %h3 Environment Variables
 
-            .environment-variables
-              = image_fields.fields_for :environment do |env_var|
-                - index = env_var.options[:child_index]
+              .environment-variables
+                = image_fields.fields_for :environment do |env_var|
+                  - index = env_var.options[:child_index]
 
+                  %dl.entries
+                    %dt.variable-name
+                      = env_var.label(:value, env_var.object.variable, data: { index: "#{index}" })
+                    %dd.variable-value
+                      - if env_var.object.value.blank?
+                        = env_var.text_field :value, placeholder: 'enter a value', class: 'empty', data: { index: "#{index}" }
+                      - else
+                        %span{ data: { index: "#{index}" } }
+                          = env_var.object.value
+                        .actions
+                          %a{ class: 'edit-action' }
+
+          .card.options
+            .content
+              .title
+                %h3 Options
                 %dl.entries
-                  %dt.variable-name
-                    = env_var.label(:value, env_var.object.variable, data: { index: "#{index}" })
-                  %dd.variable-value
-                    - if env_var.object.value.blank?
-                      = env_var.text_field :value, placeholder: 'enter a value', class: 'empty', data: { index: "#{index}" }
-                    - else
-                      %span{ data: { index: "#{index}" } }
-                        = env_var.object.value
-                      .actions
-                        %a{ class: 'edit-action' }
-
-        .card.options
-          .content
-            .title
-              %h3 Options
-              %dl.entries
-                %p
-                  %dt.variable-name
-                    Deploy Count
-                  %dd.variable-value
-                    = select :count, :count, options_for_select([["1", "1"], ["2", "2"], ["3", "3"]]), {}, class: 'fancy'
-                %p
-                  %dt.variable-name.disabled
-                    Cohost?
-                  %dd.variable-value.disabled
-                    .styled-radio
-                      = radio_button_tag :todo, true, nil, { :disabled => true }
-                      %label{ :for => 'todo_true' }
-                    Yes
-                    .styled-radio
-                      = radio_button_tag :todo, false, nil, { :disabled => true }
-                      %label{ :for => 'todo_false' }
-                    No
-                %p
-                  %dt.variable-name.disabled
-                    Restart Policy
-                  %dd.variable-value
-                    = select :count, :count, options_for_select([["Always", "Always"], ["Never", "Never"], ["Once", "Once"]]), {}, class: 'fancy', disabled: true
+                  %p
+                    %dt.variable-name
+                      Deploy Count
+                    %dd.variable-value
+                      = select :count, :count, options_for_select([["1", "1"], ["2", "2"], ["3", "3"]]), {}, class: 'fancy'
+                  %p
+                    %dt.variable-name.disabled
+                      Cohost?
+                    %dd.variable-value.disabled
+                      .styled-radio
+                        = radio_button_tag :todo, true, nil, { :disabled => true }
+                        %label{ :for => 'todo_true' }
+                      Yes
+                      .styled-radio
+                        = radio_button_tag :todo, false, nil, { :disabled => true }
+                        %label{ :for => 'todo_false' }
+                      No
+                  %p
+                    %dt.variable-name.disabled
+                      Restart Policy
+                    %dd.variable-value
+                      = select :count, :count, options_for_select([["Always", "Always"], ["Never", "Never"], ["Once", "Once"]]), {}, class: 'fancy', disabled: true
   = f.button 'Deploy to Target', class: 'button-positive'
