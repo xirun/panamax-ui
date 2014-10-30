@@ -10,6 +10,7 @@ class DeploymentTargetsController < ApplicationController
   def select
     @template = Template.find(params[:template_id])
     @deployment_targets = DeploymentTarget.all
+    return render :select, layout: 'plain'
   end
 
   def create
