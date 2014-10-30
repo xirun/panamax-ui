@@ -1,6 +1,9 @@
 (function($) {
   $.fn.toggleTargetClass = function() {
-    $(this).on('click', function(e) {
+
+    var targetSelector = '[data-toggle-target]';
+
+    $(this).on('click', targetSelector, function(e) {
       e.preventDefault();
       var $el = $(e.currentTarget),
           target = $el.data('toggle-target');
