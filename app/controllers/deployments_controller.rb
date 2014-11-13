@@ -3,10 +3,10 @@ class DeploymentsController < ApplicationController
   respond_to :json, only: [:destroy]
 
   def new
-    @template = Template.find(params[:template_id])
+    @resource = (Object.const_get params[:resource_type]).find(params[:resource_id])
     @deployment_target = DeploymentTarget.find(target_id)
     @deployment_form = DeploymentForm.new(
-      template: @template,
+      resource: @resource,
       deployment_target_id: target_id
     )
   end

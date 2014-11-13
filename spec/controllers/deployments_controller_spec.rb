@@ -4,17 +4,17 @@ describe DeploymentsController do
   describe 'GET #new' do
     let(:fake_deployment_form) { double(:fake_deployment_form) }
     let(:fake_deployment_target) { double(:fake_deployment_target) }
-    let(:fake_template) { double(:fake_template) }
+    let(:fake_resource) { double(:fake_resource) }
 
     before do
-      Template.stub(:find).and_return(fake_template)
+      Template.stub(:find).and_return(fake_resource)
       DeploymentTarget.stub(:find).and_return(fake_deployment_target)
       DeploymentForm.stub(:new).with(
-        template: fake_template,
+        resource: fake_resource,
         deployment_target_id: '7'
       ).and_return(fake_deployment_form)
 
-      get :new, deployment_target_id: 7, template_id: '8'
+      get :new, deployment_target_id: 7, resource_id: '8', resource_type: 'Template'
     end
 
     it 'assigns the deployment_form object' do
@@ -25,8 +25,8 @@ describe DeploymentsController do
       expect(assigns(:deployment_target)).to eq fake_deployment_target
     end
 
-    it 'assigns the template object' do
-      expect(assigns(:template)).to eq fake_template
+    it 'assigns the resource object' do
+      expect(assigns(:resource)).to eq fake_resource
     end
 
     it 'renders the new view' do
@@ -39,7 +39,8 @@ describe DeploymentsController do
     let(:create_params) do
       {
         deployment_target_id: '7',
-        template_id: '8'
+        resource_id: '8',
+        resource_type: 'Template'
       }.stringify_keys
     end
 
